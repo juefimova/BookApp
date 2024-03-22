@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/start">
+    <fragment
+        android:id="@+id/start"
+        android:name="com.example.loginapp.FragmentFirst"
+        tools:layout="@layout/first_fragment">
+        <action
+            android:id="@+id/to_click"
+            app:destination="@+id/click"/>
+
+        <action
+            android:id="@+id/to_click2"
+            app:destination="@+id/click2"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/click"
+        android:name="com.example.loginapp.FragmentCreate"
+        tools:layout="@layout/create_fragment">
+
+        <action
+            android:id="@+id/to_click3"
+            app:destination="@+id/click2"/>
+
+        <action
+            android:id="@+id/to_click6"
+            app:destination="@+id/click4"/>
+
+        <action
+            android:id="@+id/to_click7"
+            app:destination="@+id/click5"/>
+
+        <action
+            android:id="@+id/to_click8"
+            app:destination="@+id/click6"/>
+    </fragment>
+
+    <dialog
+        android:id="@+id/click4"
+        android:name="com.example.loginapp.CustomDialogError"
+        tools:layout="@layout/fragment_dialog_error">
+
+    </dialog>
+
+    <dialog
+        android:id="@+id/click5"
+        android:name="com.example.loginapp.CustomDialogCreated"
+        tools:layout="@layout/fragment_dialog_created">
+
+    </dialog>
+
+    <fragment
+        android:id="@+id/click2"
+        android:name="com.example.loginapp.FragmentLogin"
+        tools:layout="@layout/login_fragment">
+
+        <action
+            android:id="@+id/to_click4"
+            app:destination="@+id/click"/>
+
+        <action
+            android:id="@+id/to_click5"
+            app:destination="@+id/click3"/>
+
+        <action
+            android:id="@+id/to_click6"
+            app:destination="@+id/click7"/>
+
+        <action
+            android:id="@+id/to_click7"
+            app:destination="@+id/click8"/>
+
+        <action
+            android:id="@+id/to_click8"
+            app:destination="@+id/click9"/>
+
+
+    </fragment>
+
+    <dialog
+        android:id="@+id/click3"
+        android:name="com.example.loginapp.CustomDialog"
+        tools:layout="@layout/fragment_dialog">
+
+    </dialog>
+
+    <dialog
+        android:id="@+id/click6"
+        android:name="com.example.loginapp.CustomDialogError2"
+        tools:layout="@layout/fragment_dialog_error2">
+
+    </dialog>
+
+    <dialog
+        android:id="@+id/click7"
+        android:name="com.example.loginapp.CustomDialogError3"
+        tools:layout="@layout/fragment_dialog_error3">
+
+    </dialog>
+
+    <dialog
+        android:id="@+id/click8"
+        android:name="com.example.loginapp.CustomDialogLogged"
+        tools:layout="@layout/fragment_dialog_logged">
+
+    </dialog>
+
+    <fragment
+        android:id="@+id/click9"
+        android:name="com.example.loginapp.List"
+        tools:layout="@layout/fragment_list">
+
+        <action
+            android:id="@+id/toFragment"
+            app:destination="@+id/click_book"/>
+
+        <action
+            android:id="@+id/toChange"
+            app:destination="@+id/change"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/click_book"
+        android:name="com.example.loginapp.FragmentBook"
+        tools:layout="@layout/fragment_book">
+
+        <argument
+            android:name="key_counter"
+            app:argType="com.example.loginapp.model.RoomBook"/>
+    </fragment>
+
+    <dialog
+        android:id="@+id/change"
+        android:name="com.example.loginapp.CustomDialogChange"
+        tools:layout="@layout/dialog_change">
+
+        <argument
+            android:name="user"
+            app:argType="com.example.loginapp.model.RoomUser1"/>
+
+    </dialog>
+</navigation>
