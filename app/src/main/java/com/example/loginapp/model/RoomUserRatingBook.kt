@@ -5,17 +5,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class RoomBook (
+data class RoomUserRatingBook (
         @PrimaryKey(autoGenerate = true)
         val id: Long = 0,
         @ColumnInfo(name = "title")
         val title: String,
-        @ColumnInfo(name = "description")
-        val description: String,
-        @ColumnInfo(name = "image")
-        val image: Int,
         @ColumnInfo(name = "rating")
-        val rating: Float,
-        @ColumnInfo(name="usersClicked")
-        val usersClicked: Int
-): java.io.Serializable
+        val rating: Float
+        ): java.io.Serializable

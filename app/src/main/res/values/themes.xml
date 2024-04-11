@@ -18,4 +18,14 @@
         <item name="cornerSize">20dp</item>
         <item name="cornerFamily">rounded</item>
     </style>
+
+    <style name="MyRatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@android:color/darker_gray</item>
+        <item name="colorControlActivated">@android:color/holo_purple</item>
+    </style>
+
+    <style name="MyRatingBar2" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@android:color/transparent</item>
+        <item name="colorControlActivated">@android:color/holo_purple</item>
+    </style>
 </resources>

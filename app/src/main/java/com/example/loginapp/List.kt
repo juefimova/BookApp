@@ -8,16 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.loginapp.databinding.FragmentListBinding
 import com.example.loginapp.model.RoomBook
 import com.example.loginapp.model.RoomBookDao
 import com.example.loginapp.model.RoomUserDao
-import java.util.Locale.filter
 
 class List : Fragment() {
 
@@ -54,11 +51,11 @@ class List : Fragment() {
     }
 
 
-    val book1 = RoomBook(1, "title1", "", R.drawable.book1)
-    val book2 = RoomBook(2, "title2", "", R.drawable.book2)
-    val book3 = RoomBook(3, "title3", "", R.drawable.book3)
-    val book4 = RoomBook(4, "title4", "", R.drawable.book4)
-    val book5 = RoomBook(5, "title5", "", R.drawable.book5)
+    val book1 = RoomBook(1, "title1", "", R.drawable.book1, 3.5F, 2)
+    val book2 = RoomBook(2, "title2", "", R.drawable.book2, 2.5F, 1)
+    val book3 = RoomBook(3, "title3", "", R.drawable.book3, 4.5F, 8)
+    val book4 = RoomBook(4, "title4", "", R.drawable.book4, 3.5F, 4)
+    val book5 = RoomBook(5, "title5", "", R.drawable.book5, 4.5F, 2)
 
     val books = arrayOf(book1, book2, book3, book4, book5)
 
@@ -156,6 +153,8 @@ class List : Fragment() {
             if(book.size == 0) {
                 dataBase.insertBooks(*books)
             }
+
+
 
         }
 

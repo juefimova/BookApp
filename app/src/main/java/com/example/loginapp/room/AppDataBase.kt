@@ -5,7 +5,9 @@ import androidx.room.RoomDatabase
 
 
 
-@Database(entities = [RoomUser1::class, RoomBook::class, PersonBook::class], version = 1)
+@Database(entities = [RoomUser1::class, RoomBook::class,
+    PersonBook::class, RoomUserFriends::class, RoomPhone::class,
+    RoomUserRatingBook::class], version = 1)
 abstract class AppDataBase : RoomDatabase() {
 
     abstract fun userDao(): RoomUserDao
@@ -16,5 +18,10 @@ abstract class AppDataBase : RoomDatabase() {
 
     abstract fun personBookDao(): PersonBookDao
 
+    abstract fun userFriendsDao(): RoomUserFriendsDao
+
+    abstract fun roomPhoneDao(): RoomPhoneDao
+
+    abstract fun roomUserRatingBookDao(): RoomUserRatingBookDao
 
 }

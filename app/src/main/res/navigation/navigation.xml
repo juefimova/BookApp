@@ -132,6 +132,15 @@
         <argument
             android:name="key_counter"
             app:argType="com.example.loginapp.model.RoomBook"/>
+
+        <action
+        android:id="@+id/toShops"
+        app:destination="@+id/list_phones"/>
+
+        <action
+            android:id="@+id/toVote"
+            app:destination="@+id/vote"/>
+
     </fragment>
 
     <dialog
@@ -144,4 +153,18 @@
             app:argType="com.example.loginapp.model.RoomUser1"/>
 
     </dialog>
+
+    <fragment
+        android:id="@+id/list_phones"
+        android:name="com.example.loginapp.ListShops"
+        tools:layout="@layout/list_shops"/>
+
+    <dialog
+        android:id="@+id/vote"
+        android:name="com.example.loginapp.DialogRate"
+        tools:layout="@layout/dialog_rating">
+
+    </dialog>
+
+
 </navigation>

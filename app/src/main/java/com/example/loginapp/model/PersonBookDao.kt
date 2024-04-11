@@ -16,6 +16,8 @@ interface PersonBookDao {
     @Query("DELETE FROM personbook WHERE user_id LIKE :user_id AND name LIKE :name")
     fun deleteBookIDuserName(user_id: Long, name: String)
 
+
+
     @Delete
     fun deleteBook(book: PersonBook)
 

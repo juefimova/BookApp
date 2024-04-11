@@ -1,11 +1,13 @@
 package com.example.loginapp
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.RoomOpenHelper
 import com.example.loginapp.databinding.ItemNoteBinding
 import com.example.loginapp.model.RoomBook
+import kotlin.math.roundToInt
 
 
 class NotesAdapter(
@@ -48,8 +50,11 @@ class NotesViewHolder(
             root.setOnClickListener {
                 itemClick(item)
             }
+            rating.rating = item.rating
 
         }
+
+
 
     }
 }

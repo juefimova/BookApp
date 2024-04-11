@@ -42,5 +42,17 @@
 
     </LinearLayout>
 
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rating"
+        android:stepSize="0.5"
+        android:numStars="5"
+        tools:rating="3.5"
+        android:theme="@style/MyRatingBar"
+        android:layout_marginTop="100dp"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        />
+
 
         </androidx.cardview.widget.CardView>

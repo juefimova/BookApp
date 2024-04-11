@@ -20,7 +20,9 @@ import com.example.loginapp.databinding.FragmentBookBinding
 import android.Manifest
 import android.content.pm.PackageManager
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.example.loginapp.model.*
+import kotlin.math.roundToInt
 
 class FragmentBook : Fragment() {
     private var _binding: FragmentBookBinding? = null
@@ -49,11 +51,30 @@ class FragmentBook : Fragment() {
             .personBookDao()
     }
 
+    private val dataBase2: RoomUserFriendsDao by lazy {
+        requireContext()
+            .appDatabase
+            .userFriendsDao()
+    }
+
+    private val dataBase3: RoomBookDao by lazy {
+        requireContext()
+            .appDatabase
+            .bookDao()
+    }
+
+    private val database4: RoomUserRatingBookDao by lazy {
+        requireContext()
+            .appDatabase
+            .roomUserRatingBookDao()
+    }
+
+
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) {permissionGranted ->
-        if(permissionGranted)
+    ) { permissionGranted ->
+        if (permissionGranted)
             resultLauncherGetContacts.launch(intent)
     }
 
@@ -64,19 +85,22 @@ class FragmentBook : Fragment() {
     val resultLauncherGetContacts = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        if(it.resultCode == Activity.RESULT_OK) {
+        if (it.resultCode == Activity.RESULT_OK) {
             var uri: Uri = it.data?.data ?: return@registerForActivityResult
             Log.d("uri->", uri.toString() + "\n" + it.data?.toString())
             val cursor: Cursor = activity?.contentResolver?.query(
                 uri, null, null, null, null
             ) ?: return@registerForActivityResult
-            if(cursor.moveToFirst()) {
+            if (cursor.moveToFirst()) {
                 val id: String =
                     cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID))
                 val hasPhone: String =
                     cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.HAS_PHONE_NUMBER))
-                if(hasPhone.equals("1")) {
-                    Log.d("Phone.CONTENT_URI -> ", ContactsContract.CommonDataKinds.Phone.CONTENT_URI.toString())
+                if (hasPhone.equals("1")) {
+                    Log.d(
+                        "Phone.CONTENT_URI -> ",
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI.toString()
+                    )
                     val cursorPhones: Cursor = activity?.contentResolver?.query(
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                         null,
@@ -90,6 +114,13 @@ class FragmentBook : Fragment() {
                     val name =
                         cursorPhones.getString(cursorPhones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
                     Log.d("DATA:", "number: $number ; name:$name")
+
+
+                    val friend = RoomUserFriends(0, FragmentLogin.ID.toString(), name, number)
+                    if(friend != dataBase2.findByName(name, number)) {
+                        dataBase2.insertFriend(friend)
+                    }
+
                 }
             }
         }
@@ -101,6 +132,7 @@ class FragmentBook : Fragment() {
                 requireContext(),
                 permission
             ) == PackageManager.PERMISSION_GRANTED -> {
+                permissionLauncher.launch(permission)
 
             }
 
@@ -118,16 +150,19 @@ class FragmentBook : Fragment() {
         }
 
     }
-
+    var numClicks = 0;
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val counter = args.keyCounter
         binding.run {
 
-            share.setOnClickListener{
+            share.setOnClickListener {
                 Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, "Hello!! I think you will like ${title.text} book :)")
+                    putExtra(
+                        Intent.EXTRA_TEXT,
+                        "Hello!! I think you will like ${title.text} book :)"
+                    )
                     putExtra(Intent.EXTRA_SUBJECT, "subject")
                 }.also {
                     val chooserIntent =
@@ -136,21 +171,66 @@ class FragmentBook : Fragment() {
                 }
             }
 
-            smsButton.setOnClickListener{
+            smsButton.setOnClickListener {
                 //permissionLauncher.launch(PERMISSION)
                 requestPermission(PERMISSION)
+            }
+
+            buy.setOnClickListener{
+                findNavController().navigate(
+                    FragmentBookDirections.toShops()
+                )
+            }
+
+
+            rating2.setOnRatingBarChangeListener{ratingBar, rating, bool ->
+                Log.d("ratingBar", ratingBar.toString())
+                Log.d("rating", rating.toString())
+                Log.d("bool", bool.toString())
+
+                val book = RoomUserRatingBook(FragmentLogin.ID, title.text.toString(), rating)
+                database4.insertBook(book)
+                numClicks = dataBase3.selectUsersClicked(FragmentLogin.ID, title.text.toString()) + 1;
+                val ratingFromDB = dataBase3.selectRating(FragmentLogin.ID, title.text.toString())
+                val newRaiting = (ratingFromDB * (numClicks-1) + rating) / numClicks
+
+                dataBase3.update(newRaiting, numClicks, FragmentLogin.ID)
+                //ratingBar.isIndicator = true
+
+                rating1.isVisible = false
+
+                rate.text = (((newRaiting*10.0).roundToInt())/ 10.0F).toString()
+                rating2.rating = (newRaiting*10.0).roundToInt()/10.0f
+
+
+                clicks.text = numClicks.toString()
+
+                rating2.isIndicator = true
+
+                findNavController().navigate(
+                    FragmentBookDirections.toVote()
+                )
+
+
+                title.text = counter.title
+                image.setImageResource(counter.image)
+                rating1.rating = counter.rating
+
+
             }
 
 
             title.text = counter.title
             image.setImageResource(counter.image)
+            rating1.rating = counter.rating
+            rate.text = String.format("%.1f", dataBase3.selectRating(FragmentLogin.ID, title.text.toString()))
+            numClicks = dataBase3.selectUsersClicked(FragmentLogin.ID, title.text.toString())
 
             val name = title.text
             val id = FragmentLogin.ID
-            if(dataBase.getUserBooks(id, name.toString()).size == 1) {
+            if (dataBase.getUserBooks(id, name.toString()).size == 1) {
                 save.setColorFilter(resources.getColor(R.color.purple_200))
-            }
-            else  {
+            } else {
                 save.setColorFilter(resources.getColor(R.color.black))
                 Log.d("зашли в else", dataBase.getUserBooks(id, name.toString()).toString())
             }
@@ -164,7 +244,6 @@ class FragmentBook : Fragment() {
                     Log.d("USER_ID", dataBase.getUserBooks(id, name.toString()).toString())
 
 
-
                     /*if(dataBase.getUserBooks(id, name.toString()).size == 1) {
                         save.setColorFilter(resources.getColor(R.color.purple_200))
                     }
@@ -174,7 +253,7 @@ class FragmentBook : Fragment() {
 
                     }*/
 
-                    if(dataBase.getUserBooks(id, name.toString()).size == 1) {
+                    if (dataBase.getUserBooks(id, name.toString()).size == 1) {
                         save.setColorFilter(resources.getColor(R.color.black))
                         dataBase.deleteBookIDuserName(id, name.toString())
                     } else {
@@ -182,7 +261,6 @@ class FragmentBook : Fragment() {
                         save.setColorFilter(resources.getColor(R.color.purple_200))
                         dataBase.insertBooks(*books)
                     }
-
 
 
                 } catch (i: NullPointerException) {
@@ -212,7 +290,6 @@ class FragmentBook : Fragment() {
         _binding = null
 
     }
-
 
 
 }
