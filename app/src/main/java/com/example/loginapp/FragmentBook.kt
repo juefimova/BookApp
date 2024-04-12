@@ -151,6 +151,7 @@ class FragmentBook : Fragment() {
 
     }
     var numClicks = 0;
+    var newRating = 0f;
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val counter = args.keyCounter
@@ -183,10 +184,12 @@ class FragmentBook : Fragment() {
             }
 
 
-            rating2.setOnRatingBarChangeListener{ratingBar, rating, bool ->
+            rating2.setOnRatingBarChangeListener{ ratingBar, rating, bool ->
                 Log.d("ratingBar", ratingBar.toString())
                 Log.d("rating", rating.toString())
                 Log.d("bool", bool.toString())
+
+
 
                 val book = RoomUserRatingBook(FragmentLogin.ID, title.text.toString(), rating)
                 database4.insertBook(book)
@@ -195,17 +198,29 @@ class FragmentBook : Fragment() {
                 val newRaiting = (ratingFromDB * (numClicks-1) + rating) / numClicks
 
                 dataBase3.update(newRaiting, numClicks, FragmentLogin.ID)
-                //ratingBar.isIndicator = true
+
+
+                //parentFragmentManager.setFragmentResultListener()
 
                 rating1.isVisible = false
+                newRating = String.format("%.1f", ((newRaiting*10.0)/ 5f)).toInt() * 5 / 10f
+                rate.text = newRating.toString()
+                rating2.rating = newRaiting
+                /*3,3*10=33
 
-                rate.text = (((newRaiting*10.0).roundToInt())/ 10.0F).toString()
-                rating2.rating = (newRaiting*10.0).roundToInt()/10.0f
+                33/5f=6.6
+
+                6.6 округли до целого ближайшего - станет 7
+
+                7*5=35
+
+                35/10f=3,5*/
+
 
 
                 clicks.text = numClicks.toString()
 
-                rating2.isIndicator = true
+                rating2.isVisible = false
 
                 findNavController().navigate(
                     FragmentBookDirections.toVote()
